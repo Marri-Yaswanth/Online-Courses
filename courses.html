@@ -15,13 +15,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Metal+Mania&family=Philosopher:ital,wght@0,400;0,700;1,400;1,700&family=Smythe&display=swap" rel="stylesheet">
 </head>
-</head>
 <body>
 
     <header>
         <a href="#" class="logo"> 
-            <img src="studyverse-high-resolution-logo-black-transparent.png" width="175px
-            ">
+            <img src="studyverse-high-resolution-logo-black-transparent.png" width="175">
         </a>
 
         <ul class="navbar">
@@ -154,6 +152,11 @@
         <div class="courses-content">
             <div class="row">
                 <img src="course 1.jpeg">
+                <div class="video-overlay">
+                    <a href="#" class="play-btn" onclick="openVideoModal('https://www.youtube.com/embed/G3e-cpL7ofc'); return false;">
+                        <i class='bx bx-play-circle'></i>
+                    </a>
+                </div>
                 <div class="courses-text">
                     <h5>₹10.0</h5>
                     <h3>The Complete HTML CSS JS Courses 2022</h3>
@@ -175,6 +178,11 @@
 
             <div class="row">
                 <img src="course 2.jpeg">
+                <div class="video-overlay">
+                    <a href="#" class="play-btn" onclick="openVideoModal('https://www.youtube.com/embed/yfoY53QXEnI'); return false;">
+                        <i class='bx bx-play-circle'></i>
+                    </a>
+                </div>
                 <div class="courses-text">
                     <h5>₹10.0</h5>
                     <h3>The Complete HTML CSS JS Courses 2022</h3>
@@ -196,6 +204,11 @@
 
             <div class="row">
                 <img src="course 3.jpeg">
+                <div class="video-overlay">
+                    <a href="#" class="play-btn" onclick="openVideoModal('https://www.youtube.com/embed/pQN-pnXPaVg'); return false;">
+                        <i class='bx bx-play-circle'></i>
+                    </a>
+                </div>
                 <div class="courses-text">
                     <h5>₹10.0</h5>
                     <h3>The Complete HTML CSS JS Courses 2022</h3>
@@ -217,6 +230,11 @@
 
             <div class="row">
                 <img src="course 4.jpeg">
+                <div class="video-overlay">
+                    <a href="#" class="play-btn" onclick="openVideoModal('https://www.youtube.com/embed/EerdGm-ehJQ'); return false;">
+                        <i class='bx bx-play-circle'></i>
+                    </a>
+                </div>
                 <div class="courses-text">
                     <h5>₹10.0</h5>
                     <h3>The Complete HTML CSS JS Courses 2022</h3>
@@ -238,6 +256,11 @@
 
             <div class="row">
                 <img src="course 5.jpeg">
+                <div class="video-overlay">
+                    <a href="#" class="play-btn" onclick="openVideoModal('https://www.youtube.com/embed/PkZNo7MFNFg'); return false;">
+                        <i class='bx bx-play-circle'></i>
+                    </a>
+                </div>
                 <div class="courses-text">
                     <h5>₹10.0</h5>
                     <h3>The Complete HTML CSS JS Courses 2022</h3>
@@ -259,6 +282,11 @@
 
             <div class="row">
                 <img src="course 6.png">
+                <div class="video-overlay">
+                    <a href="#" class="play-btn" onclick="openVideoModal('https://www.youtube.com/embed/F74RlD1Z184'); return false;">
+                        <i class='bx bx-play-circle'></i>
+                    </a>
+                </div>
                 <div class="courses-text">
                     <h5>₹10.0</h5>
                     <h3>The Complete HTML CSS JS Courses 2022</h3>
@@ -372,8 +400,16 @@
     <div class="last-text">
         <p>© 2024 Marri Venkata Siva Naga Yaswanth. All rights reserved.</p>
     </div>
+
+    <!-- Video Modal -->
+    <div id="videoModal" class="video-modal">
+        <div class="video-modal-content">
+            <span class="video-close" onclick="closeVideoModal()">&times;</span>
+            <iframe id="videoFrame" width="100%" height="100%" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>
     
-    <script type="text/javascript" src="script.js"></script>
+    <script type="text/javascript" src="script.js" defer></script>
 
 </body>
 </html>
