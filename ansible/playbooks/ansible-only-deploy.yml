@@ -1,0 +1,139 @@
+---
+- name: Deploy Online Courses Website to AWS S3
+  hosts: localhost
+  connection: local
+  gather_facts: yes
+  
+  vars:
+    project_name: "studyverse-online-courses"
+    timestamp: "{{ ansible_date_time.epoch }}"
+    bucket_name: "{{ project_name }}-{{ timestamp }}"
+    aws_region: "us-east-1"
+    website_source: "../../"
+    
+  tasks:
+    - name: Display deployment information
+      debug:
+        msg:
+          - "========================================="
+          - "Deploying Online Courses Website to AWS"
+          - "========================================="
+          - "Bucket Name: {{ bucket_name }}"
+          - "Region: {{ aws_region }}"
+          - "Timestamp: {{ ansible_date_time.iso8601 }}"
+          
+    - name: Check AWS CLI installation
+      command: aws --version
+      register: aws_version
+      changed_when: false
+      
+    - name: Display AWS CLI version
+      debug:
+        msg: "{{ aws_version.stdout }}"
+        
+    - name: Check AWS credentials
+      command: aws sts get-caller-identity
+      register: aws_identity
+      changed_when: false
+      ignore_errors: yes
+      
+    - name: Fail if AWS credentials not configured
+      fail:
+        msg: "AWS credentials not configured. Run 'aws configure' first."
+      when: aws_identity.rc != 0
+      
+    - name: Display AWS account info
+      debug:
+        msg: "{{ aws_identity.stdout | from_json }}"
+        
+    - name: Create S3 bucket
+      command: >
+        aws s3api create-bucket
+        --bucket {{ bucket_name }}
+        --region {{ aws_region }}
+      register: bucket_creation
+      
+    - name: Disable block public access
+      command: >
+        aws s3api put-public-access-block
+        --bucket {{ bucket_name }}
+        --public-access-block-configuration
+        BlockPublicAcls=false,IgnorePublicAcls=false,BlockPublicPolicy=false,RestrictPublicBuckets=false
+      
+    - name: Enable static website hosting
+      command: >
+        aws s3 website s3://{{ bucket_name }}/
+        --index-document login.html
+        --error-document login.html
+      
+    - name: Create bucket policy for public access
+      copy:
+        content: |
+          {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Sid": "PublicReadGetObject",
+                "Effect": "Allow",
+                "Principal": "*",
+                "Action": "s3:GetObject",
+                "Resource": "arn:aws:s3:::{{ bucket_name }}/*"
+              }
+            ]
+          }
+        dest: /tmp/bucket-policy.json
+        
+    - name: Apply bucket policy
+      command: >
+        aws s3api put-bucket-policy
+        --bucket {{ bucket_name }}
+        --policy file:///tmp/bucket-policy.json
+        
+    - name: Upload website files to S3
+      command: >
+        aws s3 sync {{ website_source }}
+        s3://{{ bucket_name }}/
+        --exclude ".git/*"
+        --exclude "ansible/*"
+        --exclude "terraform/*"
+        --exclude "nagios/*"
+        --exclude "scripts/*"
+        --exclude ".gitignore"
+        --exclude "*.md"
+        --exclude "*.txt"
+        --exclude "*.sh"
+        --exclude "Jenkinsfile"
+        --exclude "package-lock.json"
+      args:
+        chdir: "{{ playbook_dir }}"
+        
+    - name: Get website URL
+      set_fact:
+        website_url: "http://{{ bucket_name }}.s3-website-{{ aws_region }}.amazonaws.com"
+        
+    - name: Save deployment info
+      copy:
+        content: |
+          Deployment Information
+          =====================
+          Deployment Time: {{ ansible_date_time.iso8601 }}
+          Bucket Name: {{ bucket_name }}
+          Region: {{ aws_region }}
+          Website URL: {{ website_url }}
+          
+          To cleanup this deployment, run:
+          ansible-playbook playbooks/ansible-cleanup.yml -e "bucket_name={{ bucket_name }}"
+        dest: "{{ playbook_dir }}/../deployment-info.txt"
+        
+    - name: Display success message
+      debug:
+        msg:
+          - "========================================="
+          - "✅ DEPLOYMENT SUCCESSFUL!"
+          - "========================================="
+          - "Website URL: {{ website_url }}"
+          - ""
+          - "Your Online Courses website is now live!"
+          - "Deployment info saved to: deployment-info.txt"
+          - ""
+          - "To cleanup: ansible-playbook playbooks/ansible-cleanup.yml -e 'bucket_name={{ bucket_name }}'"

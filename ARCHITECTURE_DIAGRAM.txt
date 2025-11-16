@@ -1,0 +1,373 @@
+================================================================================
+STUDYVERSE DEVOPS PROJECT - ARCHITECTURE DIAGRAM
+================================================================================
+
+COMPLETE WORKFLOW VISUALIZATION
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         DEVELOPER WORKSTATION (Mac)                      │
+│                                                                          │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐                 │
+│  │   Website    │  │   Ansible    │  │  Terraform   │                 │
+│  │    Files     │  │  Playbooks   │  │   Configs    │                 │
+│  │ (HTML/CSS/JS)│  │   (YAML)     │  │    (HCL)     │                 │
+│  └──────────────┘  └──────────────┘  └──────────────┘                 │
+│         │                  │                  │                         │
+│         └──────────────────┴──────────────────┘                         │
+│                            │                                             │
+│                    ┌───────▼────────┐                                   │
+│                    │  Git Repository │                                   │
+│                    └────────────────┘                                   │
+└─────────────────────────────────────────────────────────────────────────┘
+                              │
+                              │ Push/Deploy
+                              ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                      DEPLOYMENT OPTIONS                                  │
+│                                                                          │
+│  ┌────────────────────────────┐    ┌────────────────────────────┐     │
+│  │   OPTION 1: ANSIBLE        │    │   OPTION 2: TERRAFORM      │     │
+│  │   (Fast Deployment)        │    │   (Production Grade)       │     │
+│  │                            │    │                            │     │
+│  │  • 3 minute deployment     │    │  • 15 minute deployment    │     │
+│  │  • Single region           │    │  • Multi-region capable    │     │
+│  │  • HTTP only               │    │  • HTTPS with SSL          │     │
+│  │  • Perfect for demos       │    │  • CloudFront CDN          │     │
+│  │  • Easy cleanup            │    │  • Production ready        │     │
+│  │                            │    │                            │     │
+│  │  Commands:                 │    │  Commands:                 │     │
+│  │  ansible-playbook \        │    │  terraform init            │     │
+│  │    ansible-only-deploy.yml │    │  terraform apply           │     │
+│  └────────────────────────────┘    └────────────────────────────┘     │
+│                 │                              │                         │
+│                 └──────────────┬───────────────┘                         │
+└────────────────────────────────┼─────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                          AWS CLOUD                                       │
+│                                                                          │
+│  ┌──────────────────────────────────────────────────────────────────┐  │
+│  │                        S3 BUCKET                                  │  │
+│  │  ┌────────────────────────────────────────────────────────────┐  │  │
+│  │  │  Website Files:                                             │  │  │
+│  │  │  • courses.html (landing page)                              │  │  │
+│  │  │  • login.html (authentication)                              │  │  │
+│  │  │  • admin-dashboard.html (admin panel)                       │  │  │
+│  │  │  • CSS files (styles)                                       │  │  │
+│  │  │  • JS files (functionality)                                 │  │  │
+│  │  │  • Images (course images, logos)                            │  │  │
+│  │  └────────────────────────────────────────────────────────────┘  │  │
+│  │                                                                    │  │
+│  │  Configuration:                                                    │  │
+│  │  • Static website hosting enabled                                 │  │
+│  │  • Public read access                                             │  │
+│  │  • Index: login.html                                              │  │
+│  │  • Error: login.html                                              │  │
+│  └──────────────────────────────────────────────────────────────────┘  │
+│                                │                                         │
+│                                ▼                                         │
+│  ┌──────────────────────────────────────────────────────────────────┐  │
+│  │              CLOUDFRONT CDN (Optional - Terraform)                │  │
+│  │  • Global content delivery                                        │  │
+│  │  • HTTPS with SSL/TLS                                             │  │
+│  │  • Edge caching                                                   │  │
+│  │  • DDoS protection                                                │  │
+│  └──────────────────────────────────────────────────────────────────┘  │
+│                                │                                         │
+└────────────────────────────────┼─────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         PUBLIC INTERNET                                  │
+│                                                                          │
+│  Website URL:                                                            │
+│  http://studyverse-online-courses-XXXXX.s3-website-us-east-1.amazonaws.com
+│                                                                          │
+│  OR (with CloudFront):                                                   │
+│  https://d1234567890.cloudfront.net                                     │
+└─────────────────────────────────────────────────────────────────────────┘
+                                 │
+                                 │ HTTP/HTTPS Requests
+                                 ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    NAGIOS MONITORING (Local)                             │
+│                                                                          │
+│  ┌──────────────────────────────────────────────────────────────────┐  │
+│  │  Monitoring Checks (Every 5 minutes):                             │  │
+│  │                                                                    │  │
+│  │  1. HTTP Availability Check                                       │  │
+│  │     ✓ Is website accessible?                                      │  │
+│  │     ✓ Returns 200 OK?                                             │  │
+│  │                                                                    │  │
+│  │  2. Response Time Monitoring                                      │  │
+│  │     ✓ Response < 2 seconds (warning)                              │  │
+│  │     ✓ Response < 5 seconds (critical)                             │  │
+│  │                                                                    │  │
+│  │  3. Content Verification                                          │  │
+│  │     ✓ Page contains "StudyVerse"                                  │  │
+│  │     ✓ Content integrity check                                     │  │
+│  │                                                                    │  │
+│  │  4. SSL Certificate Check (if HTTPS)                              │  │
+│  │     ✓ Certificate valid                                           │  │
+│  │     ✓ Not expired                                                 │  │
+│  │                                                                    │  │
+│  │  5. Page Load Performance                                         │  │
+│  │     ✓ Load time < 3 seconds (warning)                             │  │
+│  │     ✓ Load time < 7 seconds (critical)                            │  │
+│  └──────────────────────────────────────────────────────────────────┘  │
+│                                                                          │
+│  Dashboard: http://localhost:8080/nagios                                │
+│  Status: Real-time updates every 5 minutes                              │
+│  Alerts: Email notifications on failures                                │
+└─────────────────────────────────────────────────────────────────────────┘
+
+
+DEPLOYMENT FLOW - ANSIBLE (3 MINUTES)
+================================================================================
+
+Step 1: Create S3 Bucket (30 seconds)
+┌─────────────────────────────────────┐
+│ aws s3api create-bucket             │
+│ --bucket studyverse-TIMESTAMP       │
+│ --region us-east-1                  │
+└─────────────────────────────────────┘
+                │
+                ▼
+Step 2: Configure Website Hosting (15 seconds)
+┌─────────────────────────────────────┐
+│ aws s3 website s3://BUCKET/         │
+│ --index-document login.html         │
+│ --error-document login.html         │
+└─────────────────────────────────────┘
+                │
+                ▼
+Step 3: Set Public Access (15 seconds)
+┌─────────────────────────────────────┐
+│ Create bucket policy                │
+│ Allow public read access            │
+│ Disable block public access         │
+└─────────────────────────────────────┘
+                │
+                ▼
+Step 4: Upload Files (2 minutes)
+┌─────────────────────────────────────┐
+│ aws s3 sync . s3://BUCKET/          │
+│ Upload all HTML, CSS, JS, images    │
+│ Set ACL to public-read              │
+└─────────────────────────────────────┘
+                │
+                ▼
+Step 5: Return URL (instant)
+┌─────────────────────────────────────┐
+│ Website URL:                        │
+│ http://BUCKET.s3-website-           │
+│   us-east-1.amazonaws.com           │
+└─────────────────────────────────────┘
+
+
+MONITORING FLOW - NAGIOS
+================================================================================
+
+Every 5 Minutes:
+┌─────────────────────────────────────┐
+│ Nagios Scheduler                    │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│ Execute Check Commands              │
+│ • check_http                        │
+│ • check_http with timing            │
+│ • check_http with content           │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│ Collect Results                     │
+│ • Status (OK/WARNING/CRITICAL)      │
+│ • Response time                     │
+│ • Output message                    │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│ Update Dashboard                    │
+│ • Service status                    │
+│ • Last check time                   │
+│ • Performance data                  │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│ Send Alerts (if needed)             │
+│ • Email notifications               │
+│ • State changes                     │
+│ • Recovery notifications            │
+└─────────────────────────────────────┘
+
+
+LOCAL DEVELOPMENT FLOW - DOCKER
+================================================================================
+
+┌─────────────────────────────────────┐
+│ docker-compose up                   │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│ Build Docker Image                  │
+│ • Base: nginx:alpine                │
+│ • Copy website files                │
+│ • Configure nginx                   │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│ Start Container                     │
+│ • Port 8080:80                      │
+│ • Nginx serves files                │
+│ • Volume mount for dev              │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│ Access Locally                      │
+│ http://localhost:8080               │
+└─────────────────────────────────────┘
+
+
+DATA FLOW - USER ACCESSING WEBSITE
+================================================================================
+
+User Browser
+     │
+     │ 1. HTTP Request
+     ▼
+┌─────────────────────────────────────┐
+│ CloudFront Edge Location (Optional) │
+│ • Check cache                       │
+│ • Return if cached                  │
+└─────────────────────────────────────┘
+     │
+     │ 2. Cache Miss
+     ▼
+┌─────────────────────────────────────┐
+│ S3 Bucket                           │
+│ • Retrieve file                     │
+│ • Return content                    │
+└─────────────────────────────────────┘
+     │
+     │ 3. HTTP Response
+     ▼
+┌─────────────────────────────────────┐
+│ CloudFront (Optional)               │
+│ • Cache content                     │
+│ • Return to user                    │
+└─────────────────────────────────────┘
+     │
+     │ 4. Render Page
+     ▼
+User Browser
+     │
+     │ 5. Load Assets (CSS, JS, Images)
+     ▼
+Repeat for each asset
+
+
+COST BREAKDOWN
+================================================================================
+
+AWS S3 Hosting (Monthly):
+┌─────────────────────────────────────┐
+│ Storage (5GB):        $0.115        │
+│ GET Requests (10K):   $0.004        │
+│ Data Transfer (1GB):  $0.090        │
+│ ─────────────────────────────────   │
+│ TOTAL:                ~$0.50-2.00   │
+└─────────────────────────────────────┘
+
+With CloudFront CDN (Monthly):
+┌─────────────────────────────────────┐
+│ S3 Storage:           $0.115        │
+│ CloudFront Transfer:  $0.850        │
+│ CloudFront Requests:  $0.075        │
+│ ─────────────────────────────────   │
+│ TOTAL:                ~$1.00-5.00   │
+└─────────────────────────────────────┘
+
+Free Tier (First 12 Months):
+┌─────────────────────────────────────┐
+│ S3:                                 │
+│ • 5GB storage                       │
+│ • 20,000 GET requests               │
+│ • 2,000 PUT requests                │
+│                                     │
+│ CloudFront:                         │
+│ • 1TB data transfer                 │
+│ • 10M HTTP/HTTPS requests           │
+│                                     │
+│ TOTAL COST: $0.00                   │
+└─────────────────────────────────────┘
+
+
+SECURITY ARCHITECTURE
+================================================================================
+
+┌─────────────────────────────────────┐
+│ IAM User/Role                       │
+│ • Programmatic access               │
+│ • S3 full access policy             │
+│ • CloudFront access (optional)      │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│ S3 Bucket Policy                    │
+│ • Allow public GetObject            │
+│ • Restrict PutObject to IAM         │
+│ • Deny DeleteBucket                 │
+└─────────────────────────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────┐
+│ CloudFront (Optional)               │
+│ • HTTPS only                        │
+│ • SSL/TLS certificate               │
+│ • DDoS protection                   │
+│ • WAF rules (optional)              │
+└─────────────────────────────────────┘
+
+
+SCALABILITY ARCHITECTURE
+================================================================================
+
+Current Setup (Ansible):
+┌─────────────────────────────────────┐
+│ Single Region (us-east-1)           │
+│ • S3 bucket                         │
+│ • HTTP access                       │
+│ • Handles 1,000+ concurrent users   │
+└─────────────────────────────────────┘
+
+Production Setup (Terraform):
+┌─────────────────────────────────────┐
+│ Multi-Region                        │
+│ • S3 bucket (origin)                │
+│ • CloudFront (global CDN)           │
+│ • Edge locations worldwide          │
+│ • Handles 100,000+ concurrent users │
+└─────────────────────────────────────┘
+
+
+================================================================================
+END OF ARCHITECTURE DIAGRAM
+================================================================================
+
+For more details, see:
+- DEVOPS_SETUP_GUIDE.md (Setup instructions)
+- README_DEVOPS.md (Technical details)
+- PROJECT_OVERVIEW.md (Complete overview)
+
+================================================================================

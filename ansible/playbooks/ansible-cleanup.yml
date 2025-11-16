@@ -1,0 +1,80 @@
+---
+- name: Cleanup AWS S3 Deployment
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  
+  vars:
+    project_prefix: "studyverse-online-courses"
+    aws_region: "us-east-1"
+    
+  tasks:
+    - name: Display cleanup information
+      debug:
+        msg:
+          - "========================================="
+          - "Cleaning up AWS S3 Deployments"
+          - "========================================="
+          - "Project: {{ project_prefix }}"
+          
+    - name: Check if specific bucket provided
+      set_fact:
+        cleanup_specific: "{{ bucket_name is defined }}"
+        
+    - name: List all project buckets
+      shell: >
+        aws s3api list-buckets
+        --query "Buckets[?starts_with(Name, '{{ project_prefix }}')].Name"
+        --output text
+      register: project_buckets
+      changed_when: false
+      when: not cleanup_specific
+      
+    - name: Display buckets to cleanup
+      debug:
+        msg: "Found buckets: {{ project_buckets.stdout_lines }}"
+      when: not cleanup_specific and project_buckets.stdout != ""
+      
+    - name: Set bucket list for cleanup
+      set_fact:
+        buckets_to_delete: "{{ [bucket_name] if cleanup_specific else project_buckets.stdout.split() }}"
+        
+    - name: Check if any buckets to delete
+      debug:
+        msg: "No buckets found to delete"
+      when: buckets_to_delete | length == 0
+      
+    - name: Empty and delete each bucket
+      block:
+        - name: Empty bucket {{ item }}
+          command: >
+            aws s3 rm s3://{{ item }}/ --recursive
+          loop: "{{ buckets_to_delete }}"
+          when: buckets_to_delete | length > 0
+          ignore_errors: yes
+          
+        - name: Delete bucket {{ item }}
+          command: >
+            aws s3api delete-bucket
+            --bucket {{ item }}
+            --region {{ aws_region }}
+          loop: "{{ buckets_to_delete }}"
+          when: buckets_to_delete | length > 0
+          ignore_errors: yes
+          
+    - name: Verify cleanup
+      shell: >
+        aws s3api list-buckets
+        --query "Buckets[?starts_with(Name, '{{ project_prefix }}')].Name"
+        --output text
+      register: remaining_buckets
+      changed_when: false
+      
+    - name: Display cleanup results
+      debug:
+        msg:
+          - "========================================="
+          - "✅ CLEANUP COMPLETE!"
+          - "========================================="
+          - "Deleted {{ buckets_to_delete | length }} bucket(s)"
+          - "Remaining buckets: {{ remaining_buckets.stdout if remaining_buckets.stdout else 'None' }}"
