@@ -1,0 +1,60 @@
+---
+- name: Sync Website to S3 Buckets
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  
+  vars:
+    website_dir: "../../website"  # Adjust path as needed
+    buckets:
+      - name: "studyverse-online-courses-1763288761"
+        type: "main"
+      - name: "studyverse-online-courses-prod-069eb5f6"
+        type: "production"
+    
+  tasks:
+    - name: Check if website directory exists
+      stat:
+        path: "{{ website_dir }}"
+      register: website_check
+      
+    - name: Fail if website directory doesn't exist
+      fail:
+        msg: "Website directory {{ website_dir }} not found"
+      when: not website_check.stat.exists
+      
+    - name: Check AWS CLI installation
+      command: which aws
+      register: aws_check
+      failed_when: aws_check.rc != 0
+      
+    - name: Verify AWS credentials
+      command: aws sts get-caller-identity
+      register: aws_creds
+      failed_when: aws_creds.rc != 0
+      
+    - name: Sync website to S3 buckets
+      shell: |
+        aws s3 sync "{{ website_dir }}" "s3://{{ item.name }}" \
+          --delete \
+          --exclude "*.DS_Store" \
+          --exclude "*.git/*" \
+          --exclude "node_modules/*" \
+          --cache-control "max-age=86400"
+      loop: "{{ buckets }}"
+      register: sync_results
+      
+    - name: Display sync results
+      debug:
+        msg: |
+          Bucket: {{ item.item.name }} ({{ item.item.type }})
+          Status: {{ 'Success' if item.rc == 0 else 'Failed' }}
+          URL: http://{{ item.item.name }}.s3-website-us-east-1.amazonaws.com
+      loop: "{{ sync_results.results }}"
+      
+    - name: Summary
+      debug:
+        msg: |
+          Sync completed for {{ buckets | length }} buckets
+          Main: http://{{ buckets[0].name }}.s3-website-us-east-1.amazonaws.com
+          Prod: http://{{ buckets[1].name }}.s3-website-us-east-1.amazonaws.com

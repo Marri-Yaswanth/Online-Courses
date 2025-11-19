@@ -1,19 +1,47 @@
 # Terraform
-.terraform/
-*.tfstate
-*.tfstate.*
-*.tfvars
-.terraform.lock.hcl
+infrastructure/terraform/.terraform/
+infrastructure/terraform/*.tfstate
+infrastructure/terraform/*.tfstate.*
+infrastructure/terraform/*.tfvars
+infrastructure/terraform/.terraform.lock.hcl
 
 # Ansible
-*.retry
+infrastructure/ansible/*.retry
+infrastructure/ansible/.ansible/
 
 # Nagios
-*.log
+infrastructure/nagios/*.log
+infrastructure/nagios/var/
+
+# Deployment
+deployment/scripts/*.log
+deployment/docker/logs/
+
+# Tests
+tests/node_modules/
+tests/coverage/
+tests/*.log
 
 # macOS
 .DS_Store
+**/.DS_Store
 
 # IDE
 .vscode/
 .idea/
+*.swp
+*.swo
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Runtime
+pids/
+*.pid
+*.seed
+
+# Temporary files
+tmp/
+temp/

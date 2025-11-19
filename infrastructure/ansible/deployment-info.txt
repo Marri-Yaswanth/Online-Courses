@@ -1,0 +1,9 @@
+Deployment Information
+=====================
+Deployment Time: 2025-11-19T07:48:14Z
+Bucket Name: studyverse-online-courses-1763538494
+Region: us-east-1
+Website URL: http://studyverse-online-courses-1763538494.s3-website-us-east-1.amazonaws.com
+
+To cleanup this deployment, run:
+ansible-playbook playbooks/ansible-cleanup.yml -e "bucket_name=studyverse-online-courses-1763538494"

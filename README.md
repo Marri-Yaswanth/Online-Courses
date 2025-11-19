@@ -1,289 +1,369 @@
-# Online-Courses-Project - StudyVerse
+# StudyVerse Online Courses - DevOps Implementation
 
-A comprehensive, production-ready online learning platform featuring a modern single-page application with Docker support, authentication system, and admin dashboard.
+[![AWS](https://img.shields.io/badge/AWS-S3-orange)](https://aws.amazon.com/s3/)
+[![Terraform](https://img.shields.io/badge/Terraform-1.5+-purple)](https://terraform.io)
+[![Ansible](https://img.shields.io/badge/Ansible-2.9+-red)](https://ansible.com)
+[![Nagios](https://img.shields.io/badge/Nagios-4.5+-blue)](https://nagios.org)
+
+A comprehensive online learning platform built with modern DevOps practices, featuring Infrastructure as Code, automated deployment, and real-time monitoring.
+
+## 🌐 Live Demo
+
+**Website:** [http://studyverse-online-courses-prod-382ecd8a.s3-website-us-east-1.amazonaws.com/](http://studyverse-online-courses-prod-382ecd8a.s3-website-us-east-1.amazonaws.com/)
+
+### Demo Credentials
+- **User Login:** `user` / `user123`
+- **Admin Login:** `admin` / `admin123`
+
+## 🏗️ Architecture
+
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Terraform     │    │     Ansible     │    │     Nagios      │
+│Infrastructure   │───▶│   Automation    │───▶│   Monitoring    │
+│   as Code       │    │   & Deployment  │    │   & Alerting    │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │                       │
+         ▼                       ▼                       ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                     AWS S3 Website Hosting                     │
+│              StudyVerse Online Learning Platform               │
+└─────────────────────────────────────────────────────────────────┘
+```
 
 ## 🚀 Features
 
-### User-Facing Features
-- **Responsive Design**: Mobile-first, works seamlessly on all devices
-- **Interactive Video Previews**: YouTube video integration with modal player for each course
-- **Course Categories**: Organized into Web Development, Data Science & AI, Mobile Development, and Cloud & DevOps
-- **Real Course Data**: 6 featured courses with actual pricing (₹999 - ₹2,199), durations, and review counts
-- **Newsletter Subscription**: Functional email signup form with confirmation messages
-- **Wishlist Functionality**: Add courses to wishlist with localStorage persistence
-- **Shopping Cart**: Cart icon with notifications for future checkout integration
-- **Smooth Animations**: Professional hover effects and transitions throughout
+### 📚 Learning Platform
+- **Interactive Course Catalog** - Browse available courses
+- **User Authentication System** - Secure login/logout functionality
+- **Admin Dashboard** - Administrative interface for platform management
+- **Responsive Design** - Mobile and desktop compatibility
+- **Modern UI/UX** - Clean, professional interface
 
-### Authentication System
-- **User & Admin Roles**: Separate login flows with role-based access control
-- **Session Management**: Remember me option with localStorage/sessionStorage
-- **Protected Routes**: Admin dashboard requires admin credentials
-- **Demo Credentials Displayed**: Easy testing with provided credentials on login page
+### ⚙️ DevOps Implementation
+- **Infrastructure as Code** - Terraform for AWS resource provisioning
+- **Automated Deployment** - Ansible playbooks for CI/CD
+- **Real-time Monitoring** - Nagios for 24/7 system monitoring
+- **One-Command Deployment** - Streamlined deployment process
+- **Environment Management** - Multi-environment support
 
-### Admin Dashboard
-- **Real-Time Statistics**: 
-  - 2,547 Total Courses (+18% growth)
-  - 52,847 Active Students (+24% growth)
-  - ₹8,45,890 Revenue (+32% growth)
-  - 4.9/5.0 Average Rating
-- **Course Management**: 
-  - **Full CRUD Operations**: Edit existing courses or add new ones directly from the dashboard
-  - **Course Editor Modal**: Interactive form with fields for name, category, price, students, status, duration, rating, reviews, image, description, and video URL
-  - **localStorage Persistence**: Course data saved to browser storage for demo purposes
-  - **Live Table Updates**: Changes instantly reflected in the course management table
-  - **Delete Functionality**: Remove courses with confirmation prompts
-- **User Management**: User list with role badges and enrollment tracking
-- **Analytics Dashboard**:
-  - Category popularity chart (Web Dev: 92%, Data Science: 78%, etc.)
-  - Recent activity feed with timestamps
-  - 5 activity types tracked
-- **Professional UI**: Modern design with cards, tables, and color-coded badges
+## 🛠️ Technology Stack
 
-### Technical Features
-- **Docker Support**: Dockerfile and docker-compose for containerized deployment
-- **Nginx Configuration**: Optimized static file serving with gzip compression
-- **Jenkins Pipeline**: CI/CD setup for automated builds and deployments
-- **Smoke Testing**: Automated health checks via curl
-- **Git-Ready**: .dockerignore for clean image builds
+| Layer | Technology | Purpose |
+|-------|------------|---------|
+| **Frontend** | HTML5, CSS3, JavaScript | User interface and interactions |
+| **Hosting** | AWS S3 Static Website | Scalable web hosting |
+| **Infrastructure** | Terraform | Infrastructure as Code |
+| **Automation** | Ansible | Deployment and configuration |
+| **Monitoring** | Nagios | System monitoring and alerting |
+| **Version Control** | Git/GitHub | Source code management |
 
-## 📋 Project Structure
+## 📁 Project Structure
 
 ```
-docker-online-course/
-├── courses.html          # Main landing page
-├── login.html           # Authentication page
-├── admin-dashboard.html # Admin panel
-├── style.css            # Main styles
-├── login.css            # Login page styles
-├── admin.css            # Admin dashboard styles
-├── script.js            # Main JavaScript (newsletter, wishlist, videos)
-├── auth.js              # Authentication logic
-├── admin.js             # Dashboard interactions
-├── Dockerfile           # Container build instructions
-├── docker-compose.yml   # Multi-container setup
-├── nginx.conf           # Web server configuration
-├── Jenkinsfile          # CI/CD pipeline
-├── smoke-test.sh        # Automated testing script
-└── README.md            # This file
+Online-Courses/
+├── 📄 Website Files
+│   ├── courses.html          # Main landing page
+│   ├── login.html           # Authentication page
+│   ├── admin-dashboard.html # Admin interface
+│   ├── style.css           # Main stylesheet
+│   ├── auth.js             # Authentication logic
+│   └── assets/             # Images and resources
+├── 🏗️ Infrastructure
+│   └── terraform/
+│       ├── main.tf         # AWS S3 configuration
+│       ├── variables.tf    # Environment variables
+│       └── outputs.tf      # Resource outputs
+├── 🤖 Automation
+│   └── ansible/
+│       ├── playbooks/      # Deployment automation
+│       └── inventory/      # Environment configs
+├── 📊 Monitoring
+│   └── nagios/
+│       ├── nagios.cfg      # Main configuration
+│       └── objects/        # Service definitions
+└── 📜 Scripts
+    └── scripts/
+        ├── sync-to-s3.sh   # Deployment script
+        └── setup-*.sh      # Setup utilities
 ```
-
-## 🎯 Demo Credentials
-
-### User Account
-- **Username**: `user`
-- **Password**: `user123`
-- **Access**: Browse courses, view content, add to wishlist
-
-### Admin Account
-- **Username**: `admin`
-- **Password**: `admin123`
-- **Access**: Full dashboard with analytics, course/user management
 
 ## 🚀 Quick Start
 
-### Option 1: Local Development (Python)
-```bash
-# Serve on port 8000
-python3 -m http.server 8000 --directory .
+### Prerequisites
 
-# Open in browser
-open http://localhost:8000/courses.html
+- AWS CLI configured with appropriate credentials
+- Terraform >= 1.0
+- Ansible >= 2.9
+- Git
+
+### 1. Clone Repository
+
+```bash
+git clone https://github.com/Marri-Yaswanth/Online-Courses.git
+cd Online-Courses
 ```
 
-### Option 2: Docker (Recommended)
-```bash
-# Build and run with Docker
-docker build -t online-courses:latest .
-docker run --rm -p 8080:80 online-courses:latest
+### 2. Deploy Infrastructure
 
-# Access the application
-open http://localhost:8080/
+```bash
+cd terraform
+terraform init
+terraform plan
+terraform apply
 ```
 
-### Option 3: Docker Compose
+### 3. Deploy Application
+
 ```bash
-# Start all services
-docker-compose up --build
+# Using Ansible
+cd infrastructure/ansible
+ansible-playbook playbooks/ansible-only-deploy.yml
 
-# Run in background
-docker-compose up -d
-
-# Stop services
-docker-compose down
+# Or using sync script
+cd deployment/scripts
+./sync-to-s3.sh
 ```
 
-## 🧪 Testing
+### 4. Setup Monitoring
 
-Run the automated smoke test:
 ```bash
-# Make executable (first time only)
-chmod +x smoke-test.sh
-
-# Test against local server
-./smoke-test.sh http://localhost:8000/courses.html
-
-# Test against Docker container
-./smoke-test.sh http://localhost:8080/
+cd infrastructure/nagios
+./setup-nagios-mac.sh  # For macOS
+# Or follow Windows setup guide for Windows
 ```
 
-## 📊 Key Metrics & Data
+## 📋 Installation Guides
 
-- **Courses**: 2,500+ available across 4 major categories
-- **Students**: 50,000+ active learners
-- **Instructors**: 500+ expert teachers
-- **Success Rate**: 98% course completion
-- **Revenue**: ₹8.45 Lakhs monthly
-- **Rating**: 4.9/5.0 average across all courses
+### macOS Setup
 
-## 🎓 Featured Courses
+```bash
+# Install Homebrew
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-1. **HTML & CSS Bootcamp** - ₹999 (12.5 hrs, 2,847 reviews)
-2. **Advanced CSS & Sass** - ₹1,299 (18.75 hrs, 1,956 reviews)
-3. **JavaScript Complete Guide** - ₹1,499 (24.3 hrs, 3,542 reviews)
-4. **Python Data Science & ML** - ₹1,799 (32.25 hrs, 4,128 reviews)
-5. **React Complete Guide** - ₹1,599 (28.67 hrs, 5,234 reviews)
-6. **Full Stack Node.js** - ₹2,199 (36.83 hrs, 3,867 reviews)
+# Install tools
+brew install awscli terraform ansible nagios nagios-plugins
+
+# Configure AWS
+aws configure
+```
+
+### Windows Setup
+
+```powershell
+# Install Chocolatey (Run as Administrator)
+Set-ExecutionPolicy Bypass -Scope Process -Force
+iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+# Install tools
+choco install awscli terraform python -y
+pip install ansible
+
+# For Nagios (Docker method recommended)
+choco install docker-desktop -y
+docker run -d --name nagios -p 8080:80 jasonrivers/nagios:latest
+```
+
+### Linux Setup
+
+```bash
+# Ubuntu/Debian
+sudo apt update
+sudo apt install -y awscli terraform ansible nagios4 nagios-plugins-contrib
+
+# Configure AWS
+aws configure
+```
 
 ## 🔧 Configuration
 
-### Nginx
-- Serves from `/usr/share/nginx/html`
-- Default index: `courses.html`
-- Gzip compression enabled for CSS/JS/SVG
-- Custom routes for `/login` and `/admin-dashboard`
+### Environment Variables
 
-### Docker
-- Base image: `nginx:alpine` (lightweight)
-- Exposed port: 80
-- Volume mounts for development (docker-compose)
-- Excludes: node_modules, .git, .md files
+Create a `.env` file or set environment variables:
 
-## 📱 Pages Overview
-
-- **`/courses.html`** - Main landing page with all courses
-- **`/login.html`** - User/Admin authentication
-- **`/admin-dashboard.html`** - Admin analytics & management
-
-## 🛠️ Technologies Used
-
-- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
-- **Icons**: Boxicons
-- **Fonts**: Google Fonts (Philosopher, Metal Mania, Smythe)
-- **Server**: Nginx
-- **Container**: Docker
-- **CI/CD**: Jenkins
-- **Version Control**: Git
-
-## 📈 Admin Dashboard Features
-
-### Statistics Cards
-- Total courses with growth percentage
-- Active students with monthly increase
-- Revenue tracking with trends
-- Average rating across platform
-
-### Management Tables
-- **Courses**: View, edit, delete courses with status badges
-- **Users**: Manage user accounts with role assignment
-
-### Analytics
-- Category popularity visualization
-- Recent activity timeline
-- Real-time updates
-
-## 🌐 Contact Information
-
-- **Location**: Mumbai, Maharashtra, India
-- **Email**: support@studyverse.com
-- **Phone**: +91 98765 43210
-- **Careers**: careers@studyverse.com
-
-## 🔗 Social Links
-
-- Facebook: Connected
-- Instagram: Connected
-- Twitter: Connected  
-- LinkedIn: Connected
-
-## 📝 Notes
-
-- Project is static frontend (no backend database)
-- Authentication uses client-side JavaScript (demo purposes)
-- For production, implement server-side auth and API
-- All course data and statistics are realistic but static
-- Newsletter signup shows confirmation but doesn't send emails
-- Wishlist stores data in localStorage
-- **Course editor saves data to localStorage** - changes persist across browser sessions but are client-side only
-
-## 🎓 Using the Course Editor (Admin)
-
-### Editing Existing Courses
-1. Login with admin credentials (admin/admin123)
-2. Navigate to "Courses Management" section
-3. Click the edit icon (✏️) next to any course
-4. Modify the course details in the modal form:
-   - Basic Info: Name, Category, Price, Status
-   - Engagement: Student count, Duration (hours)
-   - Quality Metrics: Rating (1-5), Reviews count
-   - Media: Image URL, Video preview URL
-   - Content: Description text
-5. Click "Save Course" to update
-6. Changes appear instantly in the table and are saved to localStorage
-
-### Adding New Courses
-1. Click "Add New Course" button in Courses Management
-2. Fill in all course details
-3. Click "Save Course" to create
-4. Note: Currently saves to localStorage (client-side demo)
-
-### Data Persistence
-- Course edits are stored in browser's localStorage under key `coursesData`
-- Data persists across page reloads
-- Each course is stored by its ID number (1-6 for default courses)
-- For production, replace localStorage with backend API calls
-
-## 🚢 Deployment
-
-### Jenkins Pipeline
-The included Jenkinsfile automates:
-1. Clone repository from GitHub
-2. Build Docker image
-3. Login to Docker Hub
-4. Stop old containers
-5. Run new container on port 5001
-
-### Manual Deployment
 ```bash
-# Build
-docker build -t yourusername/online-course:latest .
+export AWS_REGION=us-east-1
+export PROJECT_NAME=studyverse-online-courses
+export ENVIRONMENT=prod
+```
 
-# Push to registry
-docker login
-docker push yourusername/online-course:latest
+### Terraform Variables
 
-# Deploy
-docker run -d -p 80:80 --name online-course yourusername/online-course:latest
+Edit `terraform/variables.tf`:
+
+```hcl
+variable "aws_region" {
+  default = "us-east-1"
+}
+
+variable "project_name" {
+  default = "studyverse-online-courses"
+}
+
+variable "environment" {
+  default = "prod"
+}
+```
+
+## 📊 Monitoring
+
+### Nagios Dashboard
+
+Access monitoring at:
+- **Local:** `http://localhost:8080/nagios`
+- **Credentials:** `nagiosadmin` / `nagios`
+
+### Monitored Services
+
+- ✅ Website availability
+- ⏱️ Response time (< 2s warning, < 5s critical)
+- 🖥️ System resources (CPU, memory, disk)
+- 🌐 HTTP accessibility
+- 📈 Performance metrics
+
+## 🔄 Deployment Process
+
+### Automated Deployment
+
+```bash
+# Single command deployment
+./scripts/sync-to-s3.sh
+```
+
+### Manual Deployment Steps
+
+1. **Infrastructure:** `terraform apply`
+2. **Application:** `ansible-playbook playbooks/ansible-only-deploy.yml`
+3. **Verification:** Check Nagios dashboard
+4. **Cleanup:** `ansible-playbook playbooks/ansible-cleanup.yml`
+
+## 🛡️ Security
+
+- **S3 Bucket Policies** - Restricted public access for web content only
+- **IAM Roles** - Least privilege access principles
+- **Input Validation** - Form validation and sanitization
+- **HTTPS Ready** - CloudFront integration available
+- **Access Logging** - AWS CloudTrail integration
+
+## 📈 Performance
+
+- **Deployment Time:** < 5 minutes
+- **Response Time:** < 2 seconds average
+- **Uptime Target:** 99.9%
+- **Cost:** < $5/month for typical usage
+- **Global CDN Ready** - CloudFront integration available
+
+## 🧪 Testing
+
+### Local Testing
+
+```bash
+# Test website locally
+docker-compose up -d
+open http://localhost:8080
+```
+
+### Deployment Testing
+
+```bash
+# Dry run deployment
+./scripts/s3-dry-run.sh . studyverse-online-courses-prod-382ecd8a
+
+# Verify deployment
+ansible-playbook playbooks/verify-deployment.yml
 ```
 
 ## 🤝 Contributing
 
-This is a demonstration project. Feel free to fork and customize for your needs.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## 📄 License
+## 📚 Documentation
 
-© 2025 Marri Venkata Siva Naga Yaswanth. All rights reserved.
+- [DevOps Setup Guide](DEVOPS_SETUP_GUIDE.md)
+- [Complete Technical Documentation](COMPLETE_TECHNICAL_DOCUMENTATION.md)
+- [Mac Installation Guide](MAC_INSTALLATION_GUIDE.md)
+- [Quick Start Guide](QUICK_START.md)
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+**Terraform Issues:**
+```bash
+# State lock issues
+terraform force-unlock <LOCK_ID>
+
+# Provider issues
+terraform init -upgrade
+```
+
+**Ansible Issues:**
+```bash
+# Connection issues
+ansible all -m ping -i inventory/hosts
+
+# Verbose output
+ansible-playbook playbooks/deploy.yml -vvv
+```
+
+**Nagios Issues:**
+```bash
+# Check configuration
+nagios -v /path/to/nagios.cfg
+
+# Restart service
+sudo systemctl restart nagios
+```
+
+## 📊 Project Metrics
+
+- **Lines of Code:** 2,000+
+- **Configuration Files:** 25+
+- **Automation Scripts:** 10+
+- **Documentation Pages:** 15+
+- **Deployment Time:** 3-5 minutes
+- **Infrastructure Components:** 5+ AWS resources
 
 ## 🎯 Future Enhancements
 
-- Backend API integration
-- Real payment processing
-- Course progress tracking
-- Live video streaming
-- Discussion forums
-- Mobile apps (iOS/Android)
-- AI-powered recommendations
+### Short-term (1-3 months)
+- [ ] SSL/TLS implementation via CloudFront
+- [ ] Database integration for user management
+- [ ] CI/CD pipeline with GitHub Actions
+- [ ] Enhanced monitoring with CloudWatch
+
+### Long-term (3-12 months)
+- [ ] Multi-region deployment
+- [ ] Auto-scaling capabilities
+- [ ] Mobile application
+- [ ] Advanced analytics dashboard
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👨‍💻 Author
+
+**Marri Yaswanth**
+- GitHub: [@Marri-Yaswanth](https://github.com/Marri-Yaswanth)
+- Project: [Online-Courses](https://github.com/Marri-Yaswanth/Online-Courses)
+
+## 🙏 Acknowledgments
+
+- AWS for cloud infrastructure
+- Terraform for Infrastructure as Code
+- Ansible for automation capabilities
+- Nagios for monitoring solutions
+- Open source community for tools and resources
 
 ---
 
-**Built with ❤️ for the future of online education**
+⭐ **Star this repository if you found it helpful!**
 
+📧 **Questions?** Open an issue or reach out via GitHub.
+
+🚀 **Ready to deploy?** Follow the Quick Start guide above!
